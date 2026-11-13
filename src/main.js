@@ -35,7 +35,9 @@ const messages = {
       location: 'Location',
       languages: 'Languages',
       hobbies: 'Hobbies',
+      view_cv: 'View CV',
       download_cv: 'Download CV',
+      close: 'Close',
     },
     skills: {
       title: 'Technical Skills',
@@ -134,7 +136,9 @@ const messages = {
       location: 'Localisation',
       languages: 'Langues',
       hobbies: 'Loisirs',
+      view_cv: 'Voir / Télécharger CV',
       download_cv: 'Télécharger CV',
+      close: 'Fermer',
     },
     skills: {
       title: 'Compétences Techniques',

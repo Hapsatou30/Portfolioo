@@ -214,14 +214,18 @@
 
           <!-- Action Buttons -->
           <div class="flex flex-wrap items-center gap-4 pt-2">
-            <a
-              href="#contact"
-              @click.prevent="$emit('scroll-to', 'contact')"
-              class="inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#E11D48] hover:bg-[#BE123C] text-white font-inter text-sm font-semibold rounded-lg transition-colors duration-200"
+            <button
+              type="button"
+              @click="openCvModal"
+              class="inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#E11D48] hover:bg-[#BE123C] text-white font-inter text-sm font-semibold rounded-lg transition-colors duration-200 cursor-pointer"
             >
-              <span>⬇</span>
+              <!-- Eye / Document Preview Icon -->
+              <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
               <span>{{ $t('about.download_cv') }}</span>
-            </a>
+            </button>
 
             <button
               type="button"
@@ -257,17 +261,123 @@
         </div>
       </div>
     </div>
+
+    <!-- Native Modal Dialog for CV Preview & Download -->
+    <dialog
+      ref="cvDialogRef"
+      closedby="any"
+      aria-labelledby="cvDialogTitle"
+      @click="handleBackdropClick"
+      :class="[
+        'm-auto w-[95vw] max-w-5xl h-[88dvh] rounded-2xl border p-0 overflow-hidden backdrop:bg-black/75 backdrop:backdrop-blur-xs',
+        isDark ? 'bg-[#0a0a0a] border-white/15 text-white' : 'bg-white border-neutral-300 text-neutral-900'
+      ]"
+    >
+      <div class="flex flex-col h-full">
+        <!-- Modal Top Bar -->
+        <div
+          :class="[
+            'flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b shrink-0',
+            isDark ? 'bg-neutral-950 border-white/10' : 'bg-neutral-50 border-neutral-200'
+          ]"
+        >
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#E11D48]"></span>
+            <h2 id="cvDialogTitle" class="font-outfit font-bold text-base sm:text-lg">
+              CV — Hapsatou Thiam
+            </h2>
+          </div>
+
+          <div class="flex items-center gap-2.5">
+            <!-- Direct Download Button inside Modal -->
+            <a
+              :href="cvUrl"
+              download="CV_Hapsatou_Thiam.pdf"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#E11D48] hover:bg-[#BE123C] text-white font-inter text-xs sm:text-sm font-semibold transition-colors duration-200"
+            >
+              <span>⬇</span>
+              <span>{{ $t('about.download_cv') }}</span>
+            </a>
+
+            <!-- Open in New Tab Button -->
+            <a
+              :href="cvUrl"
+              target="_blank"
+              rel="noopener"
+              :class="[
+                'inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border font-inter text-xs sm:text-sm font-semibold transition-colors duration-200',
+                isDark
+                  ? 'border-white/15 text-neutral-200 hover:border-white/40 hover:bg-white/5'
+                  : 'border-neutral-300 text-neutral-800 hover:border-neutral-900 hover:bg-white'
+              ]"
+            >
+              <span>↗</span>
+            </a>
+
+            <!-- Native Form Method Dialog Close Button -->
+            <form method="dialog">
+              <button
+                type="submit"
+                :class="[
+                  'px-3.5 py-2 rounded-lg border font-inter text-xs sm:text-sm font-semibold transition-colors duration-200 cursor-pointer',
+                  isDark
+                    ? 'border-white/15 text-neutral-300 hover:border-[#E11D48] hover:text-white'
+                    : 'border-neutral-300 text-neutral-700 hover:border-[#E11D48] hover:text-neutral-900'
+                ]"
+              >
+                ✕ {{ $t('about.close') }}
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Embedded PDF Viewer -->
+        <div class="flex-1 bg-neutral-900">
+          <iframe
+            :src="cvUrl"
+            title="CV Hapsatou Thiam"
+            class="w-full h-full border-0"
+          ></iframe>
+        </div>
+      </div>
+    </dialog>
   </section>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 defineProps({ isDark: Boolean })
 defineEmits(['scroll-to', 'set-dark'])
 
 const { locale } = useI18n()
+
+const cvUrl = '/CV_anglais%20%20(1).pdf'
+const cvDialogRef = ref(null)
+
+function openCvModal() {
+  if (cvDialogRef.value) {
+    cvDialogRef.value.showModal()
+  }
+}
+
+function handleBackdropClick(event) {
+  const dialog = cvDialogRef.value
+  if (!dialog || 'closedBy' in HTMLDialogElement.prototype) return
+  if (event.target !== dialog) return
+
+  const rect = dialog.getBoundingClientRect()
+  const isDialogContent =
+    rect.top <= event.clientY &&
+    event.clientY <= rect.top + rect.height &&
+    rect.left <= event.clientX &&
+    event.clientX <= rect.left + rect.width
+
+  if (!isDialogContent) {
+    dialog.close()
+  }
+}
 
 const infoItems = computed(() => [
   { key: 'phone', value: '+221 78-150-96-80' },
