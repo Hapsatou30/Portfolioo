@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+@theme {
+  --font-outfit: 'Outfit', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+  --color-primary: #E11D48;
+  --color-primary-light: #F43F5E;
+  --color-primary-dark: #BE123C;
+  --color-accent: #E11D48;
+}
+
+:root {
+  color-scheme: light dark;
+  --scrollbar-track: #f5f5f5;
+  --scrollbar-thumb: #E11D48;
+
+  @media (prefers-color-scheme: dark) {
+    --scrollbar-track: #0a0a0a;
+  }
+
+  @supports (color: light-dark(white, black)) {
+    --scrollbar-track: light-dark(#f5f5f5, #0a0a0a);
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+html {
+  scroll-behavior: smooth;
+  accent-color: #E11D48;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Legacy fallback for WebKit/Blink browsers */
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 4px;
+  }
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid #E11D48;
+  outline-offset: 2px;
+}
+
+/* Solid brand text replacing gradient-text */
+.gradient-text {
+  color: #E11D48;
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+}
+
+/* Skill badge animation */
+.skill-badge {
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.skill-badge:hover {
+  transform: translateY(-2px);
+}
+
+/* Timeline line */
+.timeline-item {
+  position: relative;
+  padding-inline-start: 2rem;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 8px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #E11D48;
+}
+.timeline-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  inset-inline-start: 5px;
+  top: 20px;
+  width: 2px;
+  height: calc(100% - 10px);
+  background-color: rgba(225, 29, 72, 0.3);
+}
+
+/* Nav link underline */
+.nav-link {
+  position: relative;
+  transition: color 0.2s ease;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  inset-inline-start: 0;
+  width: 0;
+  height: 2px;
+  background-color: #E11D48;
+  transition: width 0.25s ease;
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Clean subtle surfaces */
+.glass {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-light {
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Fade in up animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Progress bar animation */
+@keyframes fillBar {
+  from { width: 0%; }
+}
+
+.skill-bar {
+  animation: fillBar 1.2s ease forwards;
+}
